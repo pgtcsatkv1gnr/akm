@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Download Image Classifier UI</title>
+</head>
+<body style="font-family: Arial; text-align:center; margin-top:50px;">
+
+  <h2>Download Image Classifier Frontend</h2>
+  <button onclick="downloadFile()" style="padding:10px 20px; font-size:16px;">
+    ⬇️ Download index.html
+  </button>
+
+<script>
+function downloadFile() {
+  const content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Image Classifier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 360px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.upload-box {
+  border: 2px dashed #aaa;
+  padding: 25px;
+  border-radius: 10px;
+  margin: 20px 0;
+  cursor: pointer;
+}
+.upload-box:hover {
+  border-color: #667eea;
+  background: #f5f7ff;
+}
+input[type="file"] { display:none; }
+img { max-width:100%; margin-top:15px; border-radius:10px; }
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #667eea;
+  color: white;
+  cursor: pointer;
+}
+.result { margin-top:20px; font-weight:bold; }
+.loader { display:none; margin-top:10px; }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <h2>🧠 Image Classifier</h2>
+
+  <label class="upload-box">
+    Upload Image
+    <input type="file" id="fileInput" accept="image/*">
+  </label>
+
+  <img id="preview" style="display:none;" />
+
+  <button onclick="uploadImage()">Classify</button>
+
+  <div class="loader" id="loader">⏳ Predicting...</div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (file) {
+    preview.style.display = "block";
+    preview.src = URL.createObjectURL(file);
+  }
+});
+
+async function uploadImage() {
+  const file = fileInput.files[0];
+  if (!file) {
+    alert("Upload an image first!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  document.getElementById("loader").style.display = "block";
+  document.getElementById("result").innerText = "";
+
+  try {
+    const res = await fetch("https://mnit-day3-model.onrender.com/predict", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("result").innerText =
+      "Prediction: " + data.label;
+
+  } catch (err) {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("result").innerText =
+      "Error connecting to backend";
+  }
+}
+</script>
+
+</body>
+</html>`;
+
+  const blob = new Blob([content], { type: "text/html" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "index.html";
+  link.click();
+}
+</script>
+
+</body>
+</html>
